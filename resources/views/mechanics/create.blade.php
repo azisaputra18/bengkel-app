@@ -1,0 +1,133 @@
+@extends('layouts.app')
+
+@section('title', 'Tambah Mekanik - BengkelApp')
+
+@section('content')
+<div class="max-w-3xl mx-auto">
+    <!-- Header Section -->
+    <div class="mb-10">
+        <a href="/mechanics" class="text-[#26D4B9] font-bold text-sm flex items-center gap-2 mb-4 hover:gap-3 transition-all">
+            <i class="fa-solid fa-arrow-left"></i> Kembali ke Daftar Mekanik
+        </a>
+        <h1 class="text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight">Registrasi Mekanik</h1>
+        <p class="text-gray-500 dark:text-slate-400 mt-2">Tambahkan anggota tim baru dan tentukan spesialisasi kerja mereka.</p>
+    </div>
+
+    @if($errors->any())
+    <div class="mb-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 px-6 py-4 rounded-2xl font-bold text-sm">
+        <ul class="list-disc list-inside space-y-1">
+            @foreach($errors->all() as $error)
+                <li class="text-xs">{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
+
+    <div class="bg-white dark:bg-slate-900 rounded-[2.5rem] p-10 border border-gray-100 dark:border-slate-800 custom-shadow transition-colors duration-300">
+        <form action="/mechanics" method="POST">
+            @csrf
+            
+            <div class="space-y-8">
+                <div class="space-y-6">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-8 h-8 bg-[#26D4B9]/10 text-[#26D4B9] rounded-lg flex items-center justify-center">
+                            <i class="fa-solid fa-id-card"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-800 dark:text-slate-200">Informasi Dasar</h3>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Nama -->
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black text-gray-400 dark:text-slate-500 uppercase tracking-widest ml-1">Nama Lengkap Mekanik</label>
+                            <input type="text" name="name" value="{{ old('name') }}"
+                                placeholder="Contoh: Budi Santoso" required
+                                class="w-full bg-gray-50 dark:bg-slate-800 border-none rounded-2xl px-5 py-4 text-gray-800 dark:text-slate-200 focus:ring-2 focus:ring-[#26D4B9] transition-all outline-none">
+                        </div>
+
+                        <!-- Spesialisasi — value pakai specialization, label pakai name -->
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black text-gray-400 dark:text-slate-500 uppercase tracking-widest ml-1">Bidang Spesialisasi</label>
+                            <div class="relative">
+                                <select name="specialization" id="specialization_select" required
+                                    class="w-full bg-gray-50 dark:bg-slate-800 border-none rounded-2xl px-5 py-4 text-gray-800 dark:text-slate-200 focus:ring-2 focus:ring-[#26D4B9] appearance-none cursor-pointer transition-all outline-none">
+                                    <option value="" disabled selected>Pilih Keahlian</option>
+                                    @foreach($services as $service)
+                                        {{-- value = specialization (untuk matching robin) --}}
+                                        {{-- label = name (untuk tampilan) --}}
+                                        <option value="{{ $service->specialization }}"
+                                            {{ old('specialization') == $service->specialization ? 'selected' : '' }}>
+                                            {{ $service->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <div class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-gray-400">
+                                    <i class="fa-solid fa-chevron-down text-xs"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Preview Kode Otomatis -->
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black text-gray-400 dark:text-slate-500 uppercase tracking-widest ml-1">
+                            Kode Mekanik (Otomatis)
+                        </label>
+                        <div id="code_preview_box"
+                            class="bg-gray-50 dark:bg-slate-800 rounded-2xl px-5 py-4 flex items-center gap-3">
+                            <div class="w-8 h-8 bg-gray-200 dark:bg-slate-700 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <i class="fa-solid fa-tag text-xs text-gray-400 dark:text-slate-500"></i>
+                            </div>
+                            <span id="code_preview_text"
+                                class="text-sm font-bold text-gray-400 dark:text-slate-500 italic">
+                                Pilih spesialisasi dulu...
+                            </span>
+                        </div>
+                        <p class="text-[10px] text-gray-400 dark:text-slate-500 ml-1">
+                            Kode dibuat otomatis: huruf pertama spesialisasi + urutan (K1, K2, C1, dst)
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Submit -->
+                <div class="pt-4">
+                    <button type="submit"
+                        class="w-full bg-[#26D4B9] hover:bg-[#20bfa6] text-white py-5 rounded-[2rem] font-black uppercase tracking-widest shadow-xl shadow-[#26D4B9]/20 transition-all hover:-translate-y-1 active:scale-95 flex items-center justify-center gap-3">
+                        <i class="fa-solid fa-save text-lg"></i>
+                        Simpan Data Mekanik
+                    </button>
+                    <p class="text-center text-gray-400 dark:text-slate-500 text-[10px] mt-4 uppercase tracking-[0.2em] font-bold">
+                        Daftar keahlian di atas sinkron dengan data Master Service
+                    </p>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+document.getElementById('specialization_select').addEventListener('change', function() {
+    const specialization = this.value;
+    const box  = document.getElementById('code_preview_box');
+    const text = document.getElementById('code_preview_text');
+
+    if (!specialization) return;
+
+    // Loading state
+    text.textContent = 'Memuat...';
+    text.className = 'text-sm font-bold text-gray-400 dark:text-slate-500 italic';
+
+    fetch(`/api/preview-mechanic-code/${specialization}`)
+        .then(r => r.json())
+        .then(data => {
+            text.textContent = data.code + ' — akan digenerate otomatis saat simpan';
+            text.className   = 'text-sm font-black text-[#26D4B9]';
+            box.classList.add('ring-1', 'ring-[#26D4B9]/30');
+        })
+        .catch(() => {
+            text.textContent = 'Gagal memuat preview';
+            text.className   = 'text-sm font-bold text-red-400';
+        });
+});
+</script>
+@endsection
