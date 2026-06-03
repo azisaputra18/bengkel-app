@@ -88,7 +88,7 @@ Setelah menjalankan seeder, gunakan akun berikut untuk login:
 
 | Email | Password | Keterangan |
 |---|---|---|
-| `admin@bengkelpro.com` | `Admin123` | Administrator |
+| `admin@bengkelpro.com` | `password` | Administrator |
 
 > ⚠️ Segera ganti password setelah login pertama kali!
 
