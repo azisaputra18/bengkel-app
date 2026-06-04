@@ -17,7 +17,6 @@
     </div>
     @endif
 
-    <!-- Header -->
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 md:mb-10">
         <div>
             <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight">Sedang Dikerjakan</h1>
@@ -29,7 +28,6 @@
         </div>
     </div>
 
-    <!-- Table -->
     <div class="bg-white dark:bg-slate-900 rounded-[2rem] md:rounded-[2.5rem] border border-gray-100 dark:border-slate-800 custom-shadow transition-colors duration-300">
         <div class="overflow-x-auto">
             <table class="w-full text-left">
@@ -197,8 +195,7 @@
 
                         {{-- Aksi --}}
                        <td class="md:px-6 md:py-6">
-                            <form action="{{ route('queues.finish', $q->id) }}" method="POST"
-                                onsubmit="kirimWA('{{ $q->phone }}', '{{ $q->customer_name }}', '{{ $q->vehicle_id }}', '{{ $q->service->name ?? '' }}')">
+                            <form action="{{ route('queues.finish', $q->id) }}" method="POST">
                                 @csrf
                                 @method('PATCH')
                                 <button type="submit"
@@ -225,21 +222,4 @@
         </div>
     </div>
 </div>
-
-<script>
-function kirimWA(phone, nama, plat, layanan) {
-    // Bersihkan nomor — ganti 0 di depan dengan 62
-    let nomor = phone.replace(/\D/g, '');
-    if (nomor.startsWith('0')) {
-        nomor = '62' + nomor.substring(1);
-    }
-
-    const pesan = `Halo ${nama}! 👋\n\nKendaraan Anda dengan nomor plat *${plat}* sudah selesai dikerjakan untuk layanan *${layanan}*.\n\nSilakan datang ke bengkel untuk pengambilan kendaraan.\n\nTerima kasih telah mempercayakan kendaraan Anda kepada kami! 🙏\n\n*BengkelPro*`;
-
-    const url = `https://wa.me/${nomor}?text=${encodeURIComponent(pesan)}`;
-
-    // Buka WA di tab baru
-    window.open(url, '_blank');
-}
-</script>
 @endsection

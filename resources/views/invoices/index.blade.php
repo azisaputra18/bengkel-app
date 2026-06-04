@@ -241,10 +241,22 @@
 
                         {{-- Aksi --}}
                         <td class="md:px-6 md:py-6 mt-3 md:mt-0 flex justify-center md:table-cell">
-                            <a href="{{ route('invoices.print', $i->id) }}"
-                                class="w-full md:w-auto bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/40 text-blue-600 dark:text-blue-400 px-6 py-3 md:py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2">
-                                <i class="fa-solid fa-print"></i> Cetak
-                            </a>
+                            <div class="flex items-center justify-center md:justify-start gap-2 w-full md:w-auto">
+                                {{-- Tombol Cetak --}}
+                                <a href="{{ route('invoices.print', $i->id) }}"
+                                    class="flex-1 md:flex-none bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/40 text-blue-600 dark:text-blue-400 px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-print"></i> Cetak
+                                </a>
+
+                                {{-- Tombol Kirim WA --}}
+                                @if($i->phone)
+                                <a href="https://wa.me/{{ preg_replace('/[^0-8]/', '', $i->phone) }}?text=Halo%20{{ urlencode($i->customer_name) }},%20Berikut%20adalah%20informasi%20invoice%20bengkel%20Anda%20dengan%20nomor%20%23{{ str_pad($i->id, 5, '0', STR_PAD_LEFT) }}."
+                                    target="_blank"
+                                    class="flex-1 md:flex-none bg-emerald-50 dark:bg-emerald-900/20 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2">
+                                    <i class="fa-brands fa-whatsapp text-xs"></i> WA
+                                </a>
+                                @endif
+                            </div>
                         </td>
                     </tr>
                     @empty
