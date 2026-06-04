@@ -66,6 +66,6 @@ use App\Http\Controllers\InvoicePdfController;
     // 3. Rute print pdf export invoice
     Route::get('/invoices', [QueueController::class, 'indexInvoice'])->name('invoices.index');
     Route::get('/invoices/{id}/print', [InvoicePdfController::class, 'print'])->name('invoices.print');
-    // Route::get('/invoices/export', [QueueController::class, 'exportExcel'])->name('invoices.export');
+    Route::get('/invoices/export', [QueueController::class, 'exportExcel'])->name('invoices.export');
 
 require __DIR__.'/auth.php';

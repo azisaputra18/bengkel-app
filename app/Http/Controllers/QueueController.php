@@ -348,11 +348,11 @@ class QueueController extends Controller
     }
     public function exportExcel(Request $request)
     {
-        // $filename = 'invoice-bengkelpro-' . now()->format('d-m-Y') . '.xlsx';
+        $filename = 'invoice-bengkelpro-' . now()->format('d-m-Y') . '.xlsx';
 
-        // return \Maatwebsite\Excel\Facades\Excel::download(
-        //     new \App\Exports\InvoiceExport($request->filter, $request->specialization),
-        //     $filename
-        // );
+        return \Maatwebsite\Excel\Facades\Excel::download(
+            new \App\Exports\InvoiceExport($request->filter, $request->specialization),
+            $filename
+        );
     }
 }
